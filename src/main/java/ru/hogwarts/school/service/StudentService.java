@@ -10,11 +10,12 @@ import java.util.Map;
 @Service
 public class StudentService {
 
-    private static Long idStudent = 1l;
+    private static long cntStudent = 1l;
     private Map<Long, Student> studentMap = new HashMap<>();
 
-    public Student createStudent(Student student) {
-        studentMap.put(idStudent++, student);
+    public Student addStudent(Student student) {
+        student.setId(cntStudent++);
+        studentMap.put(cntStudent++, student);
         return student;
     }
 
