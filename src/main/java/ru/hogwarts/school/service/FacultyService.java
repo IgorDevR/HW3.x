@@ -3,6 +3,7 @@ package ru.hogwarts.school.service;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +39,7 @@ public class FacultyService {
         return null;
     }
 
-    public List<Faculty> getAllFaculty() {
+    public Collection<Faculty> getAllFaculty() {
         return facultyMap.values().stream().toList();
     }
 

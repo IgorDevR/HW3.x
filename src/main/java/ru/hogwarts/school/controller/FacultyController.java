@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.service.FacultyService;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,7 +54,7 @@ public class FacultyController {
     }
 
     @GetMapping("/filterColor/{color}")
-    public ResponseEntity<List<Faculty>> filterStudentsByAge(@PathVariable String color) {
+    public ResponseEntity<Collection<Faculty>> filterStudentsByAge(@PathVariable String color) {
 
         List<Faculty> faculties = facultyService.getAllFaculty().stream().filter(a -> a.getColor().equals(color))
                 .collect(Collectors.toList());
