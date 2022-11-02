@@ -1,47 +1,52 @@
 package ru.hogwarts.school.service;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.repository.FacultyRepository;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class FacultyService {
 
-    private static long cntFaculty = 1l;
-    private Map<Long, Faculty> facultyMap = new HashMap<>();
+    private final FacultyRepository facultyRepository;
+
+    public FacultyService(FacultyRepository facultyRepository) {
+        this.facultyRepository = facultyRepository;
+    }
 
     public Faculty addFaculty(Faculty faculty) {
-        faculty.setId(cntFaculty);
-        facultyMap.put(cntFaculty++, faculty);
-        return faculty;
+        return facultyRepository.save(faculty);
     }
 
     public Faculty getFacultyById(Long id) {
-        return facultyMap.get(id);
+        return facultyRepository.findById(id).get();
     }
 
     public Faculty updateFaculty(Faculty faculty) {
-        if (facultyMap.containsKey(faculty.getId())) {
-            facultyMap.put(faculty.getId(), faculty);
-            return faculty;
-        }
-        return null;
+        return facultyRepository.save(faculty);
     }
 
-    public Faculty deleteFaculty(Long id) {
-        if (facultyMap.containsKey(id)) {
-            return facultyMap.remove(id);
-        }
-        return null;
+    public void deleteFaculty(Long id) {
+        facultyRepository.deleteById(id);
     }
 
     public Collection<Faculty> getAllFaculty() {
-        return facultyMap.values().stream().toList();
+        return facultyRepository.findAll();
     }
 
+    public Collection<Faculty> filterStudentsByAge(String color) {
+
+        return getAllFaculty().stream().filter(a -> a.getColor().equals(color))
+                .collect(Collectors.toList());
+
+    }
 
 }

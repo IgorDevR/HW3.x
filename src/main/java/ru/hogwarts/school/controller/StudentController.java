@@ -4,6 +4,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
+
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,18 +44,19 @@ public class StudentController {
 
     @DeleteMapping("{studentId}")
     public ResponseEntity deleteStudent(@PathVariable Long studentId) {
-        Student editStudent = studentService.deleteStudent(studentId);
-        if (editStudent == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(editStudent);
+        studentService.deleteStudent(studentId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<Collection<Student>> getAllStudents() {
+        return ResponseEntity.ok(studentService.getAllStudent());
     }
 
     @GetMapping("/filterAge/{age}")
-    public ResponseEntity<List<Student>> filterStudentsForAge(@PathVariable Integer age) {
+    public ResponseEntity<Collection<Student>> filterStudentsForAge(@PathVariable Integer age) {
 
-        List<Student>  students= studentService.getAllStudent().stream().filter(a -> a.getAge() == age)
-                .collect(Collectors.toList());
+        Collection<Student> students= studentService.filterStudentsForAge(age);
         if(students.size() == 0 || students.isEmpty()){
             return ResponseEntity.notFound().build();
         }

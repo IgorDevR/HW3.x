@@ -3,6 +3,7 @@ package ru.hogwarts.school.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.FacultyService;
 
 import java.util.Collection;
@@ -46,18 +47,19 @@ public class FacultyController {
 
     @DeleteMapping("{facultyId}")
     public ResponseEntity deleteFaculty(@PathVariable Long facultyId) {
-        Faculty editFaculty = facultyService.deleteFaculty(facultyId);
-        if (editFaculty == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(editFaculty);
+        facultyService.deleteFaculty(facultyId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<Collection<Faculty>> getAllFaculty() {
+        return ResponseEntity.ok(facultyService.getAllFaculty());
     }
 
     @GetMapping("/filterColor/{color}")
     public ResponseEntity<Collection<Faculty>> filterStudentsByAge(@PathVariable String color) {
 
-        List<Faculty> faculties = facultyService.getAllFaculty().stream().filter(a -> a.getColor().equals(color))
-                .collect(Collectors.toList());
+        Collection<Faculty> faculties = facultyService.filterStudentsByAge(color);
         if(faculties.size() == 0 || faculties.isEmpty()){
             return ResponseEntity.notFound().build();
         }
