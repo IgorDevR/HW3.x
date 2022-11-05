@@ -1,16 +1,11 @@
 package ru.hogwarts.school.service;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.FacultyRepository;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,11 +37,19 @@ public class FacultyService {
         return facultyRepository.findAll();
     }
 
-    public Collection<Faculty> filterStudentsByAge(String color) {
+    public Collection<Faculty> filterFacultyByColor(String color) {
 
         return getAllFaculty().stream().filter(a -> a.getColor().equals(color))
                 .collect(Collectors.toList());
 
+    }
+    public Faculty findFacultyByNameOrColor(String name, String color) {
+
+        return facultyRepository.findByNameContainingIgnoreCaseOrColorContainingIgnoreCase(name, color);
+    }
+    public Collection<Student> getStudentsOnFacultyByIdFaculty(long id) {
+        return facultyRepository.findById(id).get().studentsOnFaculty();
+//        return null;
     }
 
 }

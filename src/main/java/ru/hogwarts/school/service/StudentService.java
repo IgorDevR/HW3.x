@@ -1,14 +1,11 @@
 package ru.hogwarts.school.service;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,4 +41,13 @@ private final StudentRepository studentRepository;
         return getAllStudent().stream().filter(a -> a.getAge() == age)
                 .collect(Collectors.toList());
     }
+
+    public Collection<Student> findByAgeBetween(int minAge, int maxAge) {
+        return  studentRepository.findByAgeBetween(minAge, maxAge);
+    }
+    public Faculty getFacultyStudentByIdStudent(long id) {
+        return  studentRepository.findById(id).get().facultyStudent();
+//        return  null;
+    }
+
 }

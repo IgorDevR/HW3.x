@@ -7,8 +7,6 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.FacultyService;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("faculty")
@@ -53,16 +51,38 @@ public class FacultyController {
 
     @GetMapping("/getAll")
     public ResponseEntity<Collection<Faculty>> getAllFaculty() {
+        var q = facultyService.getAllFaculty();
         return ResponseEntity.ok(facultyService.getAllFaculty());
+
     }
 
     @GetMapping("/filterColor/{color}")
     public ResponseEntity<Collection<Faculty>> filterStudentsByAge(@PathVariable String color) {
 
-        Collection<Faculty> faculties = facultyService.filterStudentsByAge(color);
+        Collection<Faculty> faculties = facultyService.filterFacultyByColor(color);
         if(faculties.size() == 0 || faculties.isEmpty()){
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(faculties);
     }
+
+    @GetMapping("/findByNameOrColor")
+    public ResponseEntity findFacultyByNameOrColor(@RequestParam String nameOrColor) {
+
+        Faculty faculty = facultyService.findFacultyByNameOrColor(nameOrColor, nameOrColor);
+        if(faculty == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(faculty);
+    }
+
+    @GetMapping("/getStudentsOnFacultyByIdFaculty")
+    public ResponseEntity<Collection<Student>> getStudentsOnFacultyByIdFaculty(@RequestParam long id) {
+        Collection<Student> students = facultyService.getStudentsOnFacultyByIdFaculty(id);
+        if(students.size() == 0 || students.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(students);
+    }
+
 }
