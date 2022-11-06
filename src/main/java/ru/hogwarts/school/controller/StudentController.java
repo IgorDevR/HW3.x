@@ -19,11 +19,7 @@ public class StudentController {
 
     @GetMapping("{studentId}")
     public ResponseEntity getStudent(@PathVariable Long studentId) {
-        Student student = studentService.getStudentById(studentId);
-        if (student == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(student);
+        return ResponseEntity.ok(studentService.getStudentById(studentId));
     }
 
     @PostMapping
@@ -33,11 +29,8 @@ public class StudentController {
 
     @PutMapping
     public ResponseEntity updateStudent(@RequestBody Student student) {
-        Student editStudent = studentService.updateStudent(student);
-        if (editStudent == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(editStudent);
+
+        return ResponseEntity.ok(studentService.updateStudent(student));
     }
 
     @DeleteMapping("{studentId}")
