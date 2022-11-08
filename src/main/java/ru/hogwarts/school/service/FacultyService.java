@@ -1,7 +1,8 @@
 package ru.hogwarts.school.service;
 
 import org.springframework.stereotype.Service;
-import ru.hogwarts.school.Exceprions.NotFoundException;
+import ru.hogwarts.school.Exceprions.NotFoundExceptionFaculty;
+import ru.hogwarts.school.Exceprions.NotFoundExceptionFaculty;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.FacultyRepository;
@@ -23,7 +24,7 @@ public class FacultyService {
     }
 
     public Faculty getFacultyById(Long id) {
-        return facultyRepository.findById(id).orElseThrow(() -> new NotFoundException());
+        return facultyRepository.findById(id).orElseThrow(() -> new NotFoundExceptionFaculty());
     }
 
     public Faculty updateFaculty(Faculty faculty) {
