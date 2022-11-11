@@ -1,4 +1,4 @@
-package ru.hogwarts.school.model;
+package ru.hogwarts.school.entity;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -15,19 +15,15 @@ public class Student {
     @JoinColumn(name = "faculty_id")
     private Faculty faculty;
 
-    public Faculty facultyStudent() {
-        return faculty;
-    }
-
     public Student() {
 
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -47,17 +43,30 @@ public class Student {
         this.age = age;
     }
 
+    public Faculty getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
+    }
+
+    //    public Faculty facultyStudent() {
+//        return faculty;
+//    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Student student = (Student) o;
-        return id == student.id && age == student.age && Objects.equals(name, student.name);
+        return id == student.id && age == student.age && Objects.equals(name, student.name) && Objects.equals(faculty, student.faculty);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, age);
+        return Objects.hash(id, name, age, faculty);
     }
 
     @Override

@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 public class NotFoundExceptionAvatar extends RuntimeException{
 
-//    public NotFoundException(String message) {
-//        super(message);
-//    }
-
     public NotFoundExceptionAvatar() {
         super("Avatar with this id not found");
+    }
+
+    public NotFoundExceptionAvatar(long id) {
+        super("Avatar with this id " + id + " not found");
     }
 }

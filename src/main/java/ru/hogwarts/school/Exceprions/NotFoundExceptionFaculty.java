@@ -10,6 +10,9 @@ public class NotFoundExceptionFaculty extends RuntimeException{
 //        super(message);
 //    }
 
+    public NotFoundExceptionFaculty(long id) {
+        super("Faculty with this id " + id + " not found");
+    }
     public NotFoundExceptionFaculty() {
         super("Faculty with this id not found");
     }
