@@ -43,7 +43,7 @@ public class RecordMapper {
         Student student = new Student();
         student.setName(studentRecord.getName());
         student.setAge(studentRecord.getAge());
-        if (student.getFaculty() != null) {
+        if (studentRecord.getFaculty() != null) {
             student.setFaculty((toEntity(studentRecord.getFaculty())));
         }
         return student;
