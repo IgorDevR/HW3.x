@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.hogwarts.school.entity.Avatar;
+import ru.hogwarts.school.record.AvatarRecord;
 import ru.hogwarts.school.service.AvatarService;
 
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +17,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/avatars")
@@ -27,9 +30,8 @@ public class AvatarController {
         this.avatarService = avatarService;
     }
 
-    //    @PostMapping(value = "/uploadAvatar/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PostMapping
-    public ResponseEntity create(@RequestParam long id, @RequestParam MultipartFile avatar) throws IOException {
+        @PostMapping(value = "{id}/uploadAvatar/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity create( @RequestParam MultipartFile avatar, @PathVariable long id) throws IOException {
         avatarService.create(id, avatar);
         return ResponseEntity.ok().build();
     }
@@ -53,6 +55,12 @@ public class AvatarController {
                 .contentType(MediaType.parseMediaType(pair.getSecond()))
                 .body(pair.getFirst());
     }
+
+    @GetMapping("/getAllAvatarsPaging")
+    public ResponseEntity<Collection<AvatarRecord>> readAllAvatarsPaging(@RequestParam(value = "namberPage")int pageNum,@RequestParam(value = "quantityPerPage") int pageSize) throws IOException {
+        return ResponseEntity.ok(avatarService.readAllAvatarsPaging(pageNum, pageSize));
+    }
+
 
 
 //    @GetMapping("/fromDB/{id}")

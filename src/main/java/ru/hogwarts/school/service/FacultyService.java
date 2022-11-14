@@ -1,14 +1,15 @@
 package ru.hogwarts.school.service;
 
 import org.springframework.stereotype.Service;
-import ru.hogwarts.school.Exceprions.NotFoundExceptionFaculty;
-import ru.hogwarts.school.Exceprions.NothingFoundForQueryParameter;
+import ru.hogwarts.school.Exceptions.NotFoundExceptionFaculty;
+import ru.hogwarts.school.Exceptions.NothingFoundForQueryParameter;
 import ru.hogwarts.school.component.RecordMapper;
 import ru.hogwarts.school.entity.Faculty;
 import ru.hogwarts.school.entity.Student;
 import ru.hogwarts.school.record.FacultyRecord;
 import ru.hogwarts.school.record.StudentRecord;
 import ru.hogwarts.school.repository.FacultyRepository;
+import ru.hogwarts.school.repository.SQLQueryRepository;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -17,10 +18,12 @@ import java.util.stream.Collectors;
 public class FacultyService {
 
     private final FacultyRepository facultyRepository;
+    private final SQLQueryRepository sqlQueryRepository;
     private final RecordMapper recordMapper;
 
-    public FacultyService(FacultyRepository facultyRepository, RecordMapper recordMapper) {
+    public FacultyService(FacultyRepository facultyRepository, SQLQueryRepository sqlQueryRepository, RecordMapper recordMapper) {
         this.facultyRepository = facultyRepository;
+        this.sqlQueryRepository = sqlQueryRepository;
         this.recordMapper = recordMapper;
     }
 
@@ -83,4 +86,5 @@ public class FacultyService {
                 .stream().map(recordMapper::toRecord)
                 .collect(Collectors.toList());
     }
+
 }

@@ -1,16 +1,17 @@
 package ru.hogwarts.school.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import ru.hogwarts.school.Exceprions.NotFoundExceptionFaculty;
-import ru.hogwarts.school.Exceprions.NotFoundExceptionStudent;
-import ru.hogwarts.school.Exceprions.NothingFoundForQueryParameter;
+import ru.hogwarts.school.Exceptions.NotFoundExceptionStudent;
+import ru.hogwarts.school.Exceptions.NothingFoundForQueryParameter;
+import ru.hogwarts.school.SQLRequest.SQLQueryGetAvgAgeStudents;
+import ru.hogwarts.school.SQLRequest.SQLQueryGetNumStudents;
 import ru.hogwarts.school.component.RecordMapper;
 import ru.hogwarts.school.entity.Faculty;
 import ru.hogwarts.school.entity.Student;
 import ru.hogwarts.school.record.FacultyRecord;
 import ru.hogwarts.school.record.StudentRecord;
 import ru.hogwarts.school.repository.FacultyRepository;
+import ru.hogwarts.school.repository.SQLQueryRepository;
 import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.Collection;
@@ -21,13 +22,15 @@ import java.util.stream.Collectors;
 public class StudentService {
 
     private final StudentRepository studentRepository;
+    private final SQLQueryRepository sqlQueryRepository;
     private final FacultyRepository facultyRepository;
     private final RecordMapper recordMapper;
 
     public StudentService(StudentRepository studentRepository,
-                          FacultyRepository facultyRepository,
+                          SQLQueryRepository sqlQueryRepository, FacultyRepository facultyRepository,
                           RecordMapper recordMapper) {
         this.studentRepository = studentRepository;
+        this.sqlQueryRepository = sqlQueryRepository;
         this.facultyRepository = facultyRepository;
         this.recordMapper = recordMapper;
     }
@@ -96,5 +99,13 @@ public class StudentService {
 //    }
     public FacultyRecord findFacultyByStudent(long id) {
         return read(id).getFaculty();
+    }
+
+    public SQLQueryGetNumStudents getNumStudents() {
+        return sqlQueryRepository.getNumberOfStudents();
+    }
+
+    public SQLQueryGetAvgAgeStudents getAvgAgeStudents() {
+        return sqlQueryRepository.getAverageAgeOfStudents();
     }
 }

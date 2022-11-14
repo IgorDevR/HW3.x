@@ -1,15 +1,16 @@
-package ru.hogwarts.school.controller;
+package ru.hogwarts.school.FirstInitDb;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.hogwarts.school.record.AvatarRecord;
 import ru.hogwarts.school.repository.FacultyRepository;
 import ru.hogwarts.school.repository.StudentRepository;
-import ru.hogwarts.school.service.StartInitDb;
 import ru.hogwarts.school.component.RecordMapper;
 import ru.hogwarts.school.record.FacultyRecord;
 import ru.hogwarts.school.record.StudentRecord;
+import ru.hogwarts.school.service.AvatarService;
 import ru.hogwarts.school.service.FacultyService;
 import ru.hogwarts.school.service.StudentService;
 
@@ -21,24 +22,27 @@ public class FirstInitDbController {
 
     private final FacultyService facultyService;
     private final StudentService studentService;
-    private final FacultyRepository facultyRepository;
-    private final StudentRepository studentRepository;
-    private final RecordMapper recordMapper;
+    private final AvatarService avatarService;
+    private final StartInitDbService startInitDbService;
 
-    private final StartInitDb startInitDb;
-
-    public FirstInitDbController(FacultyService facultyService, StudentService studentService, FacultyRepository facultyRepository, StudentRepository studentRepository, RecordMapper recordMapper, StartInitDb startInitDb) {
+    public FirstInitDbController(FacultyService facultyService,
+                                 StudentService studentService,
+                                 FacultyRepository facultyRepository,
+                                 StudentRepository studentRepository,
+                                 RecordMapper recordMapper,
+                                 AvatarService avatarService,
+                                 StartInitDbService startInitDbService) {
         this.facultyService = facultyService;
         this.studentService = studentService;
-        this.facultyRepository = facultyRepository;
-        this.studentRepository = studentRepository;
-        this.recordMapper = recordMapper;
-        this.startInitDb = startInitDb;
+        this.avatarService = avatarService;
+        this.startInitDbService = startInitDbService;
     }
 
     @PostMapping()
     public ResponseEntity<Collection<StudentRecord>> startInitDb() {
 
+        Collection<AvatarRecord> allAvatars = avatarService.getAllAvatars();
+        allAvatars.stream().forEach(studentRecord ->avatarService.delete(studentRecord.getId()));
 
         Collection<StudentRecord> studentRecords = studentService.getAllStudent();
         studentRecords.stream().forEach(studentRecord ->studentService.delete(studentRecord.getId()));
@@ -49,7 +53,7 @@ public class FirstInitDbController {
 //        facultyRepository.deleteAllInBatch();
 //        studentRepository.deleteAllInBatch();
 
-        startInitDb.initDbStartValue();
+        startInitDbService.initDbStartValue();
 
         facultyRecords = facultyService.getAllFaculty();
         studentRecords = studentService.getAllStudent();

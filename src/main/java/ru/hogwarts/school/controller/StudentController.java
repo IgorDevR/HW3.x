@@ -71,5 +71,14 @@ public class StudentController {
         return ResponseEntity.ok(studentService.findFacultyByStudent(id));
     }
 
+    @GetMapping("/getNumStudents")
+    public ResponseEntity getNumStudents() {
+        return ResponseEntity.ok(studentService.getNumStudents());
+    }
+
+    @GetMapping("/getAvgAgeStudents")
+    public ResponseEntity getAvgAgeStudents() {
+        return ResponseEntity.ok(studentService.getAvgAgeStudents());
+    }
 
 }

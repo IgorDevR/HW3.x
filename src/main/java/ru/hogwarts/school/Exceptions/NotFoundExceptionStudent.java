@@ -1,7 +1,4 @@
-package ru.hogwarts.school.Exceprions;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+package ru.hogwarts.school.Exceptions;
 
 
 public class NotFoundExceptionStudent extends RuntimeException{

@@ -1,4 +1,4 @@
-package ru.hogwarts.school.Exceprions;
+package ru.hogwarts.school.Exceptions;
 
 
 public class NothingFoundForQueryParameter extends RuntimeException{

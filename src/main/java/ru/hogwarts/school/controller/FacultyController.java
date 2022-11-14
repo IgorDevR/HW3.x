@@ -3,8 +3,6 @@ package ru.hogwarts.school.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.component.RecordMapper;
-import ru.hogwarts.school.entity.Faculty;
-import ru.hogwarts.school.entity.Student;
 import ru.hogwarts.school.record.FacultyRecord;
 import ru.hogwarts.school.record.StudentRecord;
 import ru.hogwarts.school.service.FacultyService;
@@ -18,7 +16,6 @@ public class FacultyController {
 
     private final FacultyService facultyService;
     private final RecordMapper recordMapper;
-
 
     public FacultyController(FacultyService facultyService, RecordMapper recordMapper) {
         this.facultyService = facultyService;
@@ -72,5 +69,6 @@ public class FacultyController {
     public ResponseEntity<Collection<StudentRecord>> findStudentsByFaculty(@PathVariable long id){
         return ResponseEntity.ok(facultyService.findStudentsByFaculty(id));
     }
+
 
 }

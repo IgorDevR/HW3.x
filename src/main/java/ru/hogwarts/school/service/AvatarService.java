@@ -1,25 +1,31 @@
 package ru.hogwarts.school.service;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.util.Pair;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import ru.hogwarts.school.Exceprions.NotFoundExceptionAvatar;
-import ru.hogwarts.school.Exceprions.NotFoundExceptionStudent;
+import ru.hogwarts.school.Exceptions.NotFoundExceptionAvatar;
+import ru.hogwarts.school.Exceptions.NotFoundExceptionFaculty;
+import ru.hogwarts.school.Exceptions.NotFoundExceptionStudent;
 import ru.hogwarts.school.component.RecordMapper;
 import ru.hogwarts.school.entity.Avatar;
 import ru.hogwarts.school.entity.Student;
 import ru.hogwarts.school.record.AvatarRecord;
 import ru.hogwarts.school.repository.AvatarRepository;
+import ru.hogwarts.school.repository.AvatarRepositoryPaging;
 import ru.hogwarts.school.repository.StudentRepository;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -27,15 +33,17 @@ public class AvatarService {
 
 
     private final AvatarRepository avatarRepository;
+    private final AvatarRepositoryPaging avatarRepositoryPaging;
     private final StudentRepository studentRepository;
     private final RecordMapper recordMapper;
     @Value("${path.to.avatars.folder}")
     private String avatarsDir;
 
     public AvatarService(AvatarRepository avatarRepository,
-                         StudentRepository studentRepository,
+                         AvatarRepositoryPaging avatarRepositoryPaging, StudentRepository studentRepository,
                          RecordMapper recordMapper) {
         this.avatarRepository = avatarRepository;
+        this.avatarRepositoryPaging = avatarRepositoryPaging;
         this.studentRepository = studentRepository;
         this.recordMapper = recordMapper;
     }
@@ -83,20 +91,33 @@ public class AvatarService {
         return recordMapper.toRecord(avatarRepository.save(avatar));
     }
 
-    public Pair<byte[],String> readFromFs(long id) throws IOException {
-       Avatar avatar = avatarRepository.findById(id).orElseThrow(() -> new NotFoundExceptionAvatar(id));
+    public Pair<byte[], String> readFromFs(long id) throws IOException {
+        Avatar avatar = avatarRepository.findByStudentId(id).orElseThrow(() -> new NotFoundExceptionAvatar(id));
         return Pair.of(Files.readAllBytes(Paths.get(avatar.getFilePath())), avatar.getMediaType());
     }
-    public Pair<byte[],String> readFromDb(long id){
-        Avatar avatar = avatarRepository.findById(id).orElseThrow(() -> new NotFoundExceptionAvatar(id));
+
+    public Pair<byte[], String> readFromDb(long id) {
+        Avatar avatar = avatarRepository.findByStudentId(id).orElseThrow(() -> new NotFoundExceptionAvatar(id));
         return Pair.of(avatar.getData(), avatar.getMediaType());
     }
 
-    public Avatar findAvatar(long student_id) {
-        return avatarRepository.findByStudentId(student_id).orElseThrow(() -> new NotFoundExceptionAvatar());
+    public Collection<AvatarRecord> readAllAvatarsPaging(int pageNum, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize);
+        return avatarRepositoryPaging.findAll(pageRequest).getContent().stream()
+                .map(recordMapper::toRecord)
+                .collect(Collectors.toList());
+
     }
 
-    private String getExtensions(String fileName) {
-        return fileName.substring(fileName.lastIndexOf(".") + 1);
+    public Collection<AvatarRecord> getAllAvatars() {
+        return avatarRepository.findAll().stream()
+                .map(recordMapper::toRecord)
+                .collect(Collectors.toList());
+    }
+
+    public AvatarRecord delete(Long idStudents) {
+        Avatar avatar = avatarRepository.findById(idStudents).orElseThrow(() -> new NotFoundExceptionFaculty(idStudents));
+        avatarRepository.delete(avatar);
+        return recordMapper.toRecord(avatar);
     }
 }
