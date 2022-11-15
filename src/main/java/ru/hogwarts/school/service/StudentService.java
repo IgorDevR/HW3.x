@@ -11,7 +11,6 @@ import ru.hogwarts.school.entity.Student;
 import ru.hogwarts.school.record.FacultyRecord;
 import ru.hogwarts.school.record.StudentRecord;
 import ru.hogwarts.school.repository.FacultyRepository;
-import ru.hogwarts.school.repository.SQLQueryRepository;
 import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.Collection;
@@ -22,15 +21,13 @@ import java.util.stream.Collectors;
 public class StudentService {
 
     private final StudentRepository studentRepository;
-    private final SQLQueryRepository sqlQueryRepository;
     private final FacultyRepository facultyRepository;
     private final RecordMapper recordMapper;
 
     public StudentService(StudentRepository studentRepository,
-                          SQLQueryRepository sqlQueryRepository, FacultyRepository facultyRepository,
+                          FacultyRepository facultyRepository,
                           RecordMapper recordMapper) {
         this.studentRepository = studentRepository;
-        this.sqlQueryRepository = sqlQueryRepository;
         this.facultyRepository = facultyRepository;
         this.recordMapper = recordMapper;
     }
@@ -49,7 +46,7 @@ public class StudentService {
         return recordMapper.toRecord(studentRepository.findById(id).orElseThrow(() -> new NotFoundExceptionStudent(id)));
     }
 
-    public StudentRecord update(long id ,StudentRecord studentRecord) {
+    public StudentRecord update(long id, StudentRecord studentRecord) {
         Student oldStudent = studentRepository.findById(id).orElseThrow(() -> new NotFoundExceptionStudent(id));
         oldStudent.setName(studentRecord.getName());
         oldStudent.setAge(studentRecord.getAge());
@@ -90,7 +87,7 @@ public class StudentService {
         return students;
     }
 
-//    public FacultyRecord getFacultyStudentByIdStudent(long id) {
+    //    public FacultyRecord getFacultyStudentByIdStudent(long id) {
 //       Faculty faculty = recordMapper.toEntity(read(id)).facultyStudent();
 //        if (faculty == null) {
 //            throw new NothingFoundForQueryParameter();
@@ -102,10 +99,17 @@ public class StudentService {
     }
 
     public SQLQueryGetNumStudents getNumStudents() {
-        return sqlQueryRepository.getNumberOfStudents();
+        return studentRepository.getNumberOfStudents();
     }
 
     public SQLQueryGetAvgAgeStudents getAvgAgeStudents() {
-        return sqlQueryRepository.getAverageAgeOfStudents();
+        return studentRepository.getAverageAgeOfStudents();
+    }
+
+    public Collection<StudentRecord> getLastFiveStudents() {
+        return studentRepository.getLastFiveStudents()
+                .stream()
+                .map(recordMapper::toRecord)
+                .collect(Collectors.toList());
     }
 }

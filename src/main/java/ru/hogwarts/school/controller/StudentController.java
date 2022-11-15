@@ -80,5 +80,9 @@ public class StudentController {
     public ResponseEntity getAvgAgeStudents() {
         return ResponseEntity.ok(studentService.getAvgAgeStudents());
     }
+    @GetMapping("/getLastFiveStudents")
+    public ResponseEntity<Collection<StudentRecord>> getLastFiveStudents() {
+        return ResponseEntity.ok(studentService.getLastFiveStudents());
+    }
 
 }

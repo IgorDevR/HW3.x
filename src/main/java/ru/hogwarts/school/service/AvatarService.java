@@ -17,7 +17,6 @@ import ru.hogwarts.school.entity.Avatar;
 import ru.hogwarts.school.entity.Student;
 import ru.hogwarts.school.record.AvatarRecord;
 import ru.hogwarts.school.repository.AvatarRepository;
-import ru.hogwarts.school.repository.AvatarRepositoryPaging;
 import ru.hogwarts.school.repository.StudentRepository;
 
 import java.io.*;
@@ -33,17 +32,14 @@ public class AvatarService {
 
 
     private final AvatarRepository avatarRepository;
-    private final AvatarRepositoryPaging avatarRepositoryPaging;
     private final StudentRepository studentRepository;
     private final RecordMapper recordMapper;
     @Value("${path.to.avatars.folder}")
     private String avatarsDir;
 
-    public AvatarService(AvatarRepository avatarRepository,
-                         AvatarRepositoryPaging avatarRepositoryPaging, StudentRepository studentRepository,
+    public AvatarService(AvatarRepository avatarRepository, StudentRepository studentRepository,
                          RecordMapper recordMapper) {
         this.avatarRepository = avatarRepository;
-        this.avatarRepositoryPaging = avatarRepositoryPaging;
         this.studentRepository = studentRepository;
         this.recordMapper = recordMapper;
     }
@@ -103,7 +99,7 @@ public class AvatarService {
 
     public Collection<AvatarRecord> readAllAvatarsPaging(int pageNum, int pageSize) {
         PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize);
-        return avatarRepositoryPaging.findAll(pageRequest).getContent().stream()
+        return avatarRepository.findAll(pageRequest).getContent().stream()
                 .map(recordMapper::toRecord)
                 .collect(Collectors.toList());
 
