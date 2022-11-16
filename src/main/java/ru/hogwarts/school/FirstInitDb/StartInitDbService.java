@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -52,12 +53,13 @@ public class StartInitDbService {
 
 
         FacultyRecord faculty1 = generateFaculty();
-        FacultyRecord faculty2 = generateFaculty();
-        FacultyRecord faculty3 = generateFaculty();
-
         faculty1 = facultyService.read(facultyService.create(faculty1).getId());
+
+        FacultyRecord faculty2 = generateFaculty();
         faculty2 = facultyService.read(facultyService.create(faculty2).getId());
-        faculty3 = facultyService.read(facultyService.create(faculty2).getId());
+
+        FacultyRecord faculty3 = generateFaculty();
+        faculty3 = facultyService.read(facultyService.create(faculty3).getId());
 
 
         List<StudentRecord> studentRecords = new ArrayList<>();
@@ -79,6 +81,18 @@ public class StartInitDbService {
 
     }
 
+    private boolean checkForUniquenessFaculty(FacultyRecord facultyRecord) {
+
+        Collection<FacultyRecord> facultyRecords = facultyService.getAllFaculty();
+
+        if (!facultyRecords.stream().anyMatch(f -> f.getName().equals(facultyRecord.getName())) &&
+                !facultyRecords.stream().anyMatch(f -> f.getColor().equals(facultyRecord.getColor()))) {
+            return true;
+        }
+        return false;
+
+    }
+
     private StudentRecord generateStudent(FacultyRecord facultyRecord) {
         StudentRecord studentRecord = new StudentRecord();
         studentRecord.setName(faker.harryPotter().character());
@@ -93,6 +107,13 @@ public class StartInitDbService {
         FacultyRecord facultyRecord = new FacultyRecord();
         facultyRecord.setName(faker.harryPotter().house());
         facultyRecord.setColor(faker.color().name());
+
+        if (checkForUniquenessFaculty(facultyRecord)) {
+            return facultyRecord;
+        } else {
+            generateFaculty();
+        }
+
         return facultyRecord;
     }
 

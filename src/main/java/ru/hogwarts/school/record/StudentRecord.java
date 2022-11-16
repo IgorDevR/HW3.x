@@ -10,7 +10,7 @@ public class StudentRecord {
     @NotBlank(message = "name cannot be empty")
     private String name;
 
-    @Min(value = 14, message = "Min age student 14 years")
+    @Min(value = 16, message = "Min age student 16 years")
     @Max(value = 25, message = "Max age student 25 years")
     private int age;
 
