@@ -1,5 +1,7 @@
 package ru.hogwarts.school.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.Exceptions.NotFoundExceptionStudent;
 import ru.hogwarts.school.Exceptions.NothingFoundForQueryParameter;
@@ -23,6 +25,7 @@ public class StudentService {
     private final StudentRepository studentRepository;
     private final FacultyRepository facultyRepository;
     private final RecordMapper recordMapper;
+    private Logger logger = LoggerFactory.getLogger(FacultyService.class);
 
     public StudentService(StudentRepository studentRepository,
                           FacultyRepository facultyRepository,
@@ -33,6 +36,7 @@ public class StudentService {
     }
 
     public StudentRecord create(StudentRecord studentRecord) {
+        logger.info("{} method was called", "create");
         Student student = recordMapper.toEntity(studentRecord);
         Faculty faculty = Optional.ofNullable(studentRecord.getFaculty())
                 .map(FacultyRecord::getId)
@@ -43,10 +47,12 @@ public class StudentService {
     }
 
     public StudentRecord read(long id) {
+        logger.info("{} method was called", "read");
         return recordMapper.toRecord(studentRepository.findById(id).orElseThrow(() -> new NotFoundExceptionStudent(id)));
     }
 
     public StudentRecord update(long id, StudentRecord studentRecord) {
+        logger.info("{} method was called", "update");
         Student oldStudent = studentRepository.findById(id).orElseThrow(() -> new NotFoundExceptionStudent(id));
         oldStudent.setName(studentRecord.getName());
         oldStudent.setAge(studentRecord.getAge());
@@ -58,24 +64,28 @@ public class StudentService {
     }
 
     public StudentRecord delete(Long id) {
+        logger.info("{} method was called", "delete");
         Student student = studentRepository.findById(id).orElseThrow(() -> new NotFoundExceptionStudent(id));
         studentRepository.delete(student);
         return recordMapper.toRecord(student);
     }
 
     public Collection<StudentRecord> getAllStudent() {
+        logger.info("{} method was called", "getAllStudent");
         return studentRepository.findAll().stream()
                 .map(recordMapper::toRecord)
                 .collect(Collectors.toList());
     }
 
     public Collection<StudentRecord> findByAge(int age) {
+        logger.info("{} method was called", "findByAge");
         return studentRepository.findByAge(age).stream()
                 .map(recordMapper::toRecord)
                 .collect(Collectors.toList());
     }
 
     public Collection<StudentRecord> findByAgeBetween(int minAge, int maxAge) {
+        logger.info("{} method was called", "findByAgeBetween");
         Collection<StudentRecord> students = studentRepository.findByAgeBetween(minAge, maxAge)
                 .stream()
                 .map(recordMapper::toRecord)
@@ -87,26 +97,23 @@ public class StudentService {
         return students;
     }
 
-    //    public FacultyRecord getFacultyStudentByIdStudent(long id) {
-//       Faculty faculty = recordMapper.toEntity(read(id)).facultyStudent();
-//        if (faculty == null) {
-//            throw new NothingFoundForQueryParameter();
-//        }
-//        return recordMapper.toRecord(faculty);
-//    }
     public FacultyRecord findFacultyByStudent(long id) {
+        logger.info("{} method was called", "findFacultyByStudent");
         return read(id).getFaculty();
     }
 
     public SQLQueryGetNumStudents getNumStudents() {
+        logger.info("{} method was called", "getNumStudents");
         return studentRepository.getNumberOfStudents();
     }
 
     public SQLQueryGetAvgAgeStudents getAvgAgeStudents() {
+        logger.info("{} method was called", "getAvgAgeStudents");
         return studentRepository.getAverageAgeOfStudents();
     }
 
     public Collection<StudentRecord> getLastFiveStudents() {
+        logger.info("{} method was called", "getLastFiveStudents");
         return studentRepository.getLastFiveStudents()
                 .stream()
                 .map(recordMapper::toRecord)

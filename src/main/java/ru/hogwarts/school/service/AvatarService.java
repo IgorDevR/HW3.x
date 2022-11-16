@@ -1,5 +1,7 @@
 package ru.hogwarts.school.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +36,7 @@ public class AvatarService {
     private final AvatarRepository avatarRepository;
     private final StudentRepository studentRepository;
     private final RecordMapper recordMapper;
+    private Logger logger = LoggerFactory.getLogger(FacultyService.class);
     @Value("${path.to.avatars.folder}")
     private String avatarsDir;
 
@@ -44,31 +47,8 @@ public class AvatarService {
         this.recordMapper = recordMapper;
     }
 
-    //    public void create(long student_id, MultipartFile avatarFile) throws IOException {
-//
-//        Student student = studentRepository.findById(student_id).orElseThrow(() -> new NotFoundExceptionStudent());
-//        Path filePath = Path.of(avatarsDir, student_id + "." + getExtensions(avatarFile.getOriginalFilename()));
-//        Files.createDirectories(filePath.getParent());
-//        Files.deleteIfExists(filePath);
-//
-//        try (
-//                InputStream is = avatarFile.getInputStream();
-//                OutputStream os = Files.newOutputStream(filePath, StandardOpenOption.CREATE_NEW);
-//                BufferedInputStream bis = new BufferedInputStream(is, 1024);
-//                BufferedOutputStream bos = new BufferedOutputStream(os, 1024);
-//        ) {
-//            bis.transferTo(bos);
-//        }
-//        Avatar avatar = avatarRepository.findByStudentId(student_id).orElse(new Avatar());
-//        avatar.setStudent(student);
-//        avatar.setFilePath(filePath.toString());
-//        avatar.setFileSize(avatarFile.getSize());
-//        avatar.setMediaType(avatarFile.getContentType());
-//        avatar.setData(avatarFile.getBytes());
-//        avatarRepository.save(avatar);
-//
-//    }
     public AvatarRecord create(long student_id, MultipartFile multipartFile) throws IOException {
+        logger.info("{} method was called", "create");
         Student student = studentRepository.findById(student_id).orElseThrow(() -> new NotFoundExceptionStudent());
         byte[] data = multipartFile.getBytes();
 
@@ -88,16 +68,19 @@ public class AvatarService {
     }
 
     public Pair<byte[], String> readFromFs(long id) throws IOException {
+        logger.info("{} method was called", "readFromFs");
         Avatar avatar = avatarRepository.findByStudentId(id).orElseThrow(() -> new NotFoundExceptionAvatar(id));
         return Pair.of(Files.readAllBytes(Paths.get(avatar.getFilePath())), avatar.getMediaType());
     }
 
     public Pair<byte[], String> readFromDb(long id) {
+        logger.info("{} method was called", "readFromDb");
         Avatar avatar = avatarRepository.findByStudentId(id).orElseThrow(() -> new NotFoundExceptionAvatar(id));
         return Pair.of(avatar.getData(), avatar.getMediaType());
     }
 
     public Collection<AvatarRecord> readAllAvatarsPaging(int pageNum, int pageSize) {
+        logger.info("{} method was called", "readAllAvatarsPaging");
         PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize);
         return avatarRepository.findAll(pageRequest).getContent().stream()
                 .map(recordMapper::toRecord)
@@ -106,12 +89,14 @@ public class AvatarService {
     }
 
     public Collection<AvatarRecord> getAllAvatars() {
+        logger.info("{} method was called", "getAllAvatars");
         return avatarRepository.findAll().stream()
                 .map(recordMapper::toRecord)
                 .collect(Collectors.toList());
     }
 
     public AvatarRecord delete(Long idStudents) {
+        logger.info("{} method was called", "delete");
         Avatar avatar = avatarRepository.findById(idStudents).orElseThrow(() -> new NotFoundExceptionFaculty(idStudents));
         avatarRepository.delete(avatar);
         return recordMapper.toRecord(avatar);
