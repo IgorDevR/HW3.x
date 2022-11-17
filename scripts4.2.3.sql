@@ -1,6 +1,6 @@
 SELECT student.name, student.age, faculty.name
 from student
-         INNER JOIN faculty on student.faculty_id = faculty.id;
+         FULL JOIN faculty on student.faculty_id = faculty.id;
 
 SELECT student.name, student.age
 from student
