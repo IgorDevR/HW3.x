@@ -15,8 +15,7 @@ import ru.hogwarts.school.record.StudentRecord;
 import ru.hogwarts.school.repository.FacultyRepository;
 import ru.hogwarts.school.repository.StudentRepository;
 
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -118,5 +117,24 @@ public class StudentService {
                 .stream()
                 .map(recordMapper::toRecord)
                 .collect(Collectors.toList());
+    }
+
+    public Collection<StudentRecord> getStudentsByFirstLetter(String firstLetterName) {
+        logger.info("{} method was called", "getStudentsByFirstLetter");
+        return studentRepository.findAll()
+                .stream()
+                .filter(student -> student.getName()
+                        .startsWith(firstLetterName))
+                .sorted(Comparator.comparing(Student::getName))
+                .map(recordMapper::toRecord)
+                .collect(Collectors.toList());
+    }
+    public double getAvgAgeAllStudents() {
+        logger.info("{} method was called", "getAvgAgeAllStudents");
+        return studentRepository.findAll()
+                .stream()
+                .mapToDouble(a -> a.getAge())
+                .average().orElse(-1);
+
     }
 }

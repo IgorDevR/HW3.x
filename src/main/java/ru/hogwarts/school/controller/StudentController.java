@@ -85,4 +85,14 @@ public class StudentController {
         return ResponseEntity.ok(studentService.getLastFiveStudents());
     }
 
+    @GetMapping("/getStudentsByFirstLetter/{firstLetterName}")
+    public ResponseEntity<Collection<StudentRecord>> getStudentsByFirstLetter(@PathVariable String firstLetterName) {
+        return ResponseEntity.ok(studentService.getStudentsByFirstLetter(firstLetterName));
+    }
+
+    @GetMapping("/getAvgAgeAllStudents")
+    public ResponseEntity getAvgAgeAllStudents() {
+        return ResponseEntity.ok(studentService.getAvgAgeAllStudents());
+    }
+
 }

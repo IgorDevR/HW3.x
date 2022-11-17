@@ -1,0 +1,14 @@
+###
+GET http://localhost:8081/student/sort{{studentId}}
+
+###
+GET http://localhost:8081/faculty
+
+###
+GET http://localhost:8081/faculty
+
+###
+GET http://localhost:8888/students/getStudentsByFirstLetter/{{firstLetterName}}
+
+###
+GET http://localhost:8888/students/getStudentsByFirstLetter/{{firstLetterName}}
