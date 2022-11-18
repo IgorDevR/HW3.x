@@ -103,6 +103,6 @@ public class FacultyService {
         return facultyRepository.findAll().stream()
                 .map(faculty -> faculty.getName())
                 .max(String::compareTo)
-                .get();
+                .orElse(null);
     }
 }

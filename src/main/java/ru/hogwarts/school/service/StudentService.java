@@ -119,14 +119,14 @@ public class StudentService {
                 .collect(Collectors.toList());
     }
 
-    public Collection<StudentRecord> getStudentsByFirstLetter(String firstLetterName) {
+    public Collection<String> getStudentsByFirstLetter(String firstLetterName) {
         logger.info("{} method was called", "getStudentsByFirstLetter");
         return studentRepository.findAll()
                 .stream()
-                .filter(student -> student.getName()
-                        .startsWith(firstLetterName))
-                .sorted(Comparator.comparing(Student::getName))
-                .map(recordMapper::toRecord)
+                .map(student -> student.getName())
+                .filter(name -> name.startsWith(firstLetterName))
+                .map(name -> name.toUpperCase())
+                .sorted()
                 .collect(Collectors.toList());
     }
     public double getAvgAgeAllStudents() {

@@ -86,12 +86,12 @@ public class StudentController {
     }
 
     @GetMapping("/getStudentsByFirstLetter/{firstLetterName}")
-    public ResponseEntity<Collection<StudentRecord>> getStudentsByFirstLetter(@PathVariable String firstLetterName) {
+    public ResponseEntity<Collection<String>> getStudentsByFirstLetter(@PathVariable String firstLetterName) {
         return ResponseEntity.ok(studentService.getStudentsByFirstLetter(firstLetterName));
     }
 
     @GetMapping("/getAvgAgeAllStudents")
-    public ResponseEntity getAvgAgeAllStudents() {
+    public ResponseEntity<Double> getAvgAgeAllStudents() {
         return ResponseEntity.ok(studentService.getAvgAgeAllStudents());
     }
 
