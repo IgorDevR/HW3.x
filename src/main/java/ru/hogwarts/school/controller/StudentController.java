@@ -95,4 +95,15 @@ public class StudentController {
         return ResponseEntity.ok(studentService.getAvgAgeAllStudents());
     }
 
+    @GetMapping("/getAllStudentsMultiThreadPrintln")
+    public ResponseEntity getAllStudentsMultiThread() {
+        studentService.getAllStudentsMultiThreadPrintln();
+        return ResponseEntity.ok().build();
+    }
+    @GetMapping("/getAllStudentsMultiThreadPrintlnSync")
+    public ResponseEntity getAllStudentsMultiThreadPrintlnSync() {
+        studentService.getAllStudentsMultiThreadPrintlnSync();
+        return ResponseEntity.ok().build();
+    }
+
 }
