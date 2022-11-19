@@ -2,7 +2,10 @@ package ru.hogwarts.school.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.school.SQLRequest.SQLQueryGetAvgAgeStudents;
+import ru.hogwarts.school.SQLRequest.SQLQueryGetNumStudents;
 import ru.hogwarts.school.component.RecordMapper;
+import ru.hogwarts.school.record.FacultyRecord;
 import ru.hogwarts.school.record.StudentRecord;
 import ru.hogwarts.school.service.StudentService;
 
@@ -26,12 +29,12 @@ public class StudentController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity getStudent(@PathVariable long id) {
+    public ResponseEntity<StudentRecord> getStudent(@PathVariable long id) {
         return ResponseEntity.ok(studentService.read(id));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity updateStudent(@PathVariable long id, @RequestBody StudentRecord studentRecord) {
+    public ResponseEntity<StudentRecord> updateStudent(@PathVariable long id, @RequestBody StudentRecord studentRecord) {
         return ResponseEntity.ok(studentService.update(id, studentRecord));
     }
 
@@ -67,17 +70,17 @@ public class StudentController {
 //    }
 
     @GetMapping("/{id}/faculty")
-    public ResponseEntity findFacultyByStudent(@PathVariable long id) {
+    public ResponseEntity<FacultyRecord> findFacultyByStudent(@PathVariable long id) {
         return ResponseEntity.ok(studentService.findFacultyByStudent(id));
     }
 
     @GetMapping("/getNumStudents")
-    public ResponseEntity getNumStudents() {
+    public ResponseEntity<SQLQueryGetNumStudents> getNumStudents() {
         return ResponseEntity.ok(studentService.getNumStudents());
     }
 
     @GetMapping("/getAvgAgeStudents")
-    public ResponseEntity getAvgAgeStudents() {
+    public ResponseEntity<SQLQueryGetAvgAgeStudents> getAvgAgeStudents() {
         return ResponseEntity.ok(studentService.getAvgAgeStudents());
     }
     @GetMapping("/getLastFiveStudents")
@@ -91,7 +94,7 @@ public class StudentController {
     }
 
     @GetMapping("/getAvgAgeAllStudents")
-    public ResponseEntity getAvgAgeAllStudents() {
+    public ResponseEntity<Double> getAvgAgeAllStudents() {
         return ResponseEntity.ok(studentService.getAvgAgeAllStudents());
     }
 

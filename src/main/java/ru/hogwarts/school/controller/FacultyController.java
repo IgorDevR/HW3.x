@@ -23,17 +23,17 @@ public class FacultyController {
     }
 
     @PostMapping
-    public ResponseEntity createFaculty(@RequestBody @Valid FacultyRecord facultyRecord) {
+    public ResponseEntity<FacultyRecord> createFaculty(@RequestBody @Valid FacultyRecord facultyRecord) {
         return ResponseEntity.ok(facultyService.create(facultyRecord));
     }
 
     @GetMapping("{Id}")
-    public ResponseEntity getFaculty(@PathVariable long Id) {
+    public ResponseEntity<FacultyRecord> getFaculty(@PathVariable long Id) {
         return ResponseEntity.ok(facultyService.read(Id));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity updateFaculty(@PathVariable long id,
+    public ResponseEntity<FacultyRecord> updateFaculty(@PathVariable long id,
                                         @RequestBody @Valid FacultyRecord facultyRecord) {
         return ResponseEntity.ok(facultyService.update(id, facultyRecord));
     }
@@ -56,7 +56,7 @@ public class FacultyController {
     }
 
     @GetMapping("/findByNameOrColor")
-    public ResponseEntity findByNameOrColor(@RequestParam String nameOrColor) {
+    public ResponseEntity<FacultyRecord> findByNameOrColor(@RequestParam String nameOrColor) {
         return ResponseEntity.ok(facultyService.findByNameOrColor(nameOrColor, nameOrColor));
     }
 
@@ -71,7 +71,7 @@ public class FacultyController {
     }
 
     @GetMapping("/getLongestNameFaculty")
-    public ResponseEntity getLongestNameFaculty(){
+    public ResponseEntity<String> getLongestNameFaculty(){
         return ResponseEntity.ok(facultyService.getLongestNameFaculty());
     }
 

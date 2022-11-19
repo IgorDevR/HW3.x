@@ -167,36 +167,47 @@ public class StudentService {
 
     }
 
-    private Integer cnt = 0;
-
     public void getAllStudentsMultiThreadPrintlnSync() {
         logger.info("{} method was called", "getAllStudentsMultiThread");
-        List<Student> studentRecords = studentRepository.findAll()
+        List<Student> students = studentRepository.findAll()
                 .stream()
                 .collect(Collectors.toList());
 
-        System.out.println("Thread name: " + Thread.currentThread().getName() + " " + studentRecords.get(0) + "number = " + MultiThreadPrintlnSync());
-        System.out.println("Thread name: " + Thread.currentThread().getName() + " " + studentRecords.get(1) + "number = " + MultiThreadPrintlnSync());
+        System.out.println("collection:");
+        students.forEach(System.out::println);
+
+        multiThreadPrintlnSync(students);
+        multiThreadPrintlnSync(students);
 
         new Thread(() -> {
-            System.out.println("Thread name: " + Thread.currentThread().getName() + " " + studentRecords.get(2) + "number = " + MultiThreadPrintlnSync());
-            System.out.println("Thread name: " + Thread.currentThread().getName() + " " + studentRecords.get(3) + "number = " + MultiThreadPrintlnSync());
+            multiThreadPrintlnSync(students);
+            multiThreadPrintlnSync(students);
         }).start();
-
-        System.out.println("Thread name: " + Thread.currentThread().getName() + " " + studentRecords.get(4) + "number = " + MultiThreadPrintlnSync());
-        System.out.println("Thread name: " + Thread.currentThread().getName() + " " + studentRecords.get(5) + "number = " + MultiThreadPrintlnSync());
-
+//
+        multiThreadPrintlnSync(students);
+        multiThreadPrintlnSync(students);
+//
         new Thread(() -> {
-            System.out.println("Thread name: " + Thread.currentThread().getName() + " " + studentRecords.get(6) + "number = " + MultiThreadPrintlnSync());
-            System.out.println("Thread name: " + Thread.currentThread().getName() + " " + studentRecords.get(7) + "number = " + MultiThreadPrintlnSync());
+            multiThreadPrintlnSync(students);
+            multiThreadPrintlnSync(students);
         }).start();
 
-        System.out.println("Thread name: " + Thread.currentThread().getName() + " " + studentRecords.get(8) + "number = " + MultiThreadPrintlnSync());
-
+        multiThreadPrintlnSync(students);
     }
 
-    private synchronized Integer MultiThreadPrintlnSync() {
-        return cnt++;
+    Integer index = 0;
+
+    private void multiThreadPrintlnSync(List<Student> students) {
+
+        synchronized (index) {
+        System.out.println(students.get(index).getName());
+            index++;
+            if (index == students.size()) {
+                index = 0;
+            }
+        }
     }
+
+
 
 }
